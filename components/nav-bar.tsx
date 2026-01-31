@@ -5,10 +5,18 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useConvexAuth } from "convex/react";
 
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/theme-toggle";
 import SearchInput from "@/components/search-input";
 import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const { isAuthenticated, isLoading } = useConvexAuth();
@@ -33,22 +41,18 @@ export function Navbar() {
     <nav className="w-full border-b bg-background">
       <div className="container flex h-16 items-center justify-between">
         {/* Left: Brand + Navigation */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-10">
           <Link href="/" className="text-2xl font-bold">
             Next<span className="text-primary">Pro</span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-1">
-            <Link href="/" className={buttonVariants({ variant: "ghost" })}>
-              Home
-            </Link>
-            <Link href="/blog" className={buttonVariants({ variant: "ghost" })}>
-              Blog
-            </Link>
-            <Link href="/create" className={buttonVariants({ variant: "ghost" })}>
-              Create
-            </Link>
-          </div>
+          <NavigationMenu className="hidden md:flex">
+            <NavigationMenuList className="gap-1">
+              <NavItem href="/">Home</NavItem>
+              <NavItem href="/blog">Blog</NavItem>
+              <NavItem href="/create">Create</NavItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
 
         {/* Right: Search + Actions */}
@@ -83,6 +87,33 @@ export function Navbar() {
         </div>
       </div>
     </nav>
+  );
+}
+
+/* --------------------------------- */
+/* Reusable Nav Item                  */
+/* --------------------------------- */
+function NavItem({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <NavigationMenuItem>
+      <NavigationMenuLink asChild>
+        <Link
+          href={href}
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "h-9 px-4"
+          )}
+        >
+          {children}
+        </Link>
+      </NavigationMenuLink>
+    </NavigationMenuItem>
   );
 }
 
