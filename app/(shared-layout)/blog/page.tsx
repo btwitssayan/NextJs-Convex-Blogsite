@@ -9,6 +9,7 @@ import { Suspense } from "react";
 
 import type { Metadata } from 'next'
 import { cacheLife, cacheTag } from "next/cache";
+import { connection } from "next/server";
  
 export const metadata: Metadata = {
   title: 'Blogs',
@@ -37,10 +38,10 @@ function BlogsListPage() {
 export default BlogsListPage;
 
 async function BlogList() {
-  // await connection();// tells that it is dynamic
-  "use cache";
-  cacheLife("hours");
-  cacheTag("bloglist");
+  await connection();// tells that it is dynamic
+  // "use cache";
+  // cacheLife("hours");
+  // cacheTag("bloglist");
   const blogs = await fetchQuery(api.blog.getBlogs);
 
   return (
