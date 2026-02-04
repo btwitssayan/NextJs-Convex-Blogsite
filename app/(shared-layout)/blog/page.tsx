@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { connection } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 
 export const metadata: Metadata = {
   title: "Blogs",
@@ -34,7 +35,10 @@ export default function BlogsListPage() {
 }
 
 async function BlogList() {
-  await connection(); // marks route as dynamic
+  // await connection(); // marks route as dynamic
+  "use cache"
+  cacheLife("hours");
+  cacheTag("bloglist");
   const blogs = await fetchQuery(api.blog.getBlogs);
 
   if (!blogs || blogs.length === 0) {
